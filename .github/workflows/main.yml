@@ -1,1 +1,25 @@
+on:
+  push:
+    branches: ['student']  
 
+
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+
+
+    steps:
+
+      - uses: actions/checkout@v3 
+
+      - name: "login to Docker hub"
+        run: docker login --username ${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_TOKEN }}
+
+      - name: "Bulding Docker image"
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/showstudent .
+
+      - name: "Pushing to Docker hub"
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/showstudent    
