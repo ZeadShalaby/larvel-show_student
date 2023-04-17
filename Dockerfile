@@ -1,28 +1,38 @@
-FROM php:8.1-apache
 
-# Install system dependencies
-RUN apt-get update && \
-    apt-get install -y curl libonig-dev libzip-dev unzip && \
-    rm -rf /var/lib/apt/lists/*
+FROM php:8.1-fpm
 
-# Enable Apache mod_rewrite
-RUN a2enmod rewrite
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo_mysql zip
+WORKDIR /var/www/html
 
-# Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --no-cache
 
-# Copy the project files
-COPY . /var/www/html
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip
 
-# Install the project dependencies
-RUN cd /var/www/html && composer install --no-dev --prefer-dist --optimize-autoloader
 
-# Set the ownership of the project files to the Apache user
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
-# Expose port 80 and start Apache
-EXPOSE 80
-CMD ["apache2-foreground"]
+
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+
+COPY . .
+
+
+RUN composer install --no-interaction --no-progress --no-scripts
+
+
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html \
+    && chmod -R 777 storage bootstrap/cache
+
+
+EXPOSE 8000
+
+
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
