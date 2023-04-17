@@ -97,7 +97,7 @@
             <td style="color : red"></td>
         </tr>   
         <tr>
-            <td><a style ="text-decoration: none ;color:black;font-weight: bold;" href ='http://127.0.0.1:8000/'>Back</td>
+            <td><a style ="text-decoration: none ;color:black;font-weight: bold;" href ='http://127.0.0.1:8000/student'>Back</td>
             </a></td>
             
         </tr>
