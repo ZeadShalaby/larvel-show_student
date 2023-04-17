@@ -14,11 +14,11 @@ use App\Models\students;
 |
 */
 
-/*Route::get('/', function () {
+Route::get('/', function () {
     return view('welcome');
-});*/
+});
 
-Route::get("/",function(){
+Route::get("/student",function(){
  
     $arr=[
         
@@ -28,10 +28,11 @@ Route::get("/",function(){
     
     
 });
+
 Route::get("/information/{id}",function($id){
-$student = students::find($id);
-return view("information",$student);
-});
-Route::get("/user",function(){
+
+    $student = students::find($id);
+
+    return view("information",$student);
 
 });
